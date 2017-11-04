@@ -1,8 +1,10 @@
 FILES = ['web_server/web_server_container/htmls/index.html',
          'web_server/web_server_container/htmls/sunghwan.html',
          'web_server/web_server_container/htmls/yeongjin.html',
-         'web_server/web_server_container/images/favicon.ico']
-PATHS = ['/', '/sunghwan', '/yeongjin', '/favicon.ico']
+         'web_server/web_server_container/images/favicon.ico',
+         'web_server/web_server_container/css/style.css',
+         'web_server/web_server_container/images/sunghwan.jpg',]
+PATHS = ['/', '/sunghwan', '/yeongjin', '/favicon.ico', '/style.css', '/images/sunghwan.jpg',]
 
 
 class RequestHandler:
@@ -15,6 +17,7 @@ class RequestHandler:
 
     def parse_request(self, request):
         splited_request = request.split()
+        print(request)
         self.method, self.path = splited_request[:2]
         print(splited_request)
 
