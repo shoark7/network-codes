@@ -5,7 +5,7 @@ from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 from .request_handle import RequestHandler
 
 
-request_handler = RequestHandler()
+request_handler = RequestHandler("HTML handler")
 LISTEN_QUEUE_SIZE = 1024
 
 
@@ -50,7 +50,3 @@ def serve():
             os._exit(0)
         else:
             connect_socket.close()
-
-
-if __name__ == '__main__':
-    serve()

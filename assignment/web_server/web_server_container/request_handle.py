@@ -6,7 +6,8 @@ PATHS = ['/', '/sunghwan', '/yeongjin', '/favicon.ico']
 
 
 class RequestHandler:
-    def __init__(self):
+    def __init__(self, name=None):
+        self.name = name
         self.path = ''
         self.method = ''
         self.html_template = b''
