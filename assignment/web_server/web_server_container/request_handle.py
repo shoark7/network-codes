@@ -1,3 +1,5 @@
+import logging
+
 FILES = ['web_server/web_server_container/htmls/index.html',
          'web_server/web_server_container/htmls/sunghwan.html',
          'web_server/web_server_container/htmls/yeongjin.html',
@@ -14,12 +16,25 @@ class RequestHandler:
         self.method = ''
         self.html_template = b''
         self.response = b''
+        self.agent_string = ''
+        self.is_mobile = False
+
+        # Logger initializing
+        self.logger = logging.getLogger('Access logger')
+        self.logger.setLevel(logging.INFO)
+        fh = logging.FileHandler('web_server/web_server_container/access.log')
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        fh.setFormatter(formatter)
+        fh.setLevel(logging.INFO)
+        self.logger.addHandler(fh)
 
     def parse_request(self, request):
-        splited_request = request.split()
-        print(request)
-        self.method, self.path = splited_request[:2]
-        print(splited_request)
+        try:
+            splited_request = request.split()
+            self.method, self.path, *agent_string = splited_request[:4]
+            self.agent_string = ''.join(self.agent_string)
+        except ValueError:
+            return
 
     def handle_request(self):
         if self.path not in PATHS:
@@ -33,6 +48,9 @@ HTTP/1.1 200 OK\n\n"""
 
         file_index = PATHS.index(self.path)
         target_file = FILES[file_index]
+        if 'html' in target_file:
+            self.is_mobile = 'Mobile' if 'Android' in self.agent_string else 'Desktop'
+            self.logger.info(self.is_mobile)
 
         with open(target_file, 'rb') as fd:
             text = fd.read()

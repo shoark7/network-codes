@@ -1,23 +1,10 @@
-import errno
 import os
-import signal
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 from .request_handle import RequestHandler
 
 
 request_handler = RequestHandler("HTML handler")
 LISTEN_QUEUE_SIZE = 1024
-
-
-def child_exit_handler(signum, frame):
-    while True:
-        try:
-            pid, status = os.waitpid(-1, os.WNOHANG)
-        except OSError:
-            return
-
-        if pid == 0:
-            return
 
 
 def serve():
@@ -30,18 +17,8 @@ def serve():
     server_socket.listen(LISTEN_QUEUE_SIZE)
     print("Server is serving on port:", port)
 
-    signal.signal(signal.SIGCHLD, child_exit_handler)
-
     while True:
-        try:
-            connect_socket, client_address = server_socket.accept()
-        except IOError as e:
-            code, msg = e.args
-            if code == errno.EINTR:
-                continue
-            else:
-                raise
-
+        connect_socket, client_address = server_socket.accept()
         pid = os.fork()
 
         if pid == 0:
